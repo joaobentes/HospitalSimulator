@@ -11,7 +11,7 @@ namespace HospitalSimulator.Controllers {
         {
             return Repository.Instance.Patients;
         }
-        
+
         [HttpGet("{id}", Name = "GetPatient")]
         public IActionResult GetByID(long id)
         {
