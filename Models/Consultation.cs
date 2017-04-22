@@ -20,7 +20,7 @@ namespace HospitalSimulator.Models {
 
         [Required(ErrorMessage = "Treatment Machine's Name is required.")]
         [ForeignKey("TreatmentRoom")]
-        public int TreatmentRoomName { get; set; }
+        public string TreatmentRoomName { get; set; }
         public virtual TreatmentRoom TreatmentRoom { get; set; }
     }
 }

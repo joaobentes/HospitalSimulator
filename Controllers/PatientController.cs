@@ -1,21 +1,31 @@
-using Microsoft.AspNetCore.Mvc;
-using HospitalSimulator.Models;
 using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 
-namespace HospitalSimulator.Controllers {
+using HospitalSimulator.Models;
+
+namespace HospitalSimulator.Controllers 
+{
     [Route("patients")]
-    public class PatientController: Controller {
+    public class PatientController: Controller 
+    {
+        private readonly ApplicationDbContext _context;
+
+        public PatientController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
         
         [HttpGet]
         public IEnumerable<Patient> GetAll()
         {
-            return Repository.Instance.Patients;
+            return _context.Patients.ToList();
         }
 
         [HttpGet("{id}", Name = "GetPatient")]
         public IActionResult GetByID(long id)
         {
-            var patient = Repository.Instance.Patients.Find(p => p.PatientID == id);
+            var patient = _context.Patients.Where(p => p.PatientID == id);
             if (patient == null)
             {
                 return NotFound();
@@ -35,7 +45,8 @@ namespace HospitalSimulator.Controllers {
             }
             else
             {
-                Repository.Instance.Patients.Add(patient);
+                _context.Patients.Add(patient);
+                _context.SaveChanges();
                 return CreatedAtRoute("GetPatient", new { id = patient.PatientID}, patient);
             }
         }
