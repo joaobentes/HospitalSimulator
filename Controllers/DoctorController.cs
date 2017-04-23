@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System;
+using Newtonsoft.Json.Linq;
 
 using HospitalSimulator.Models;
 
 namespace HospitalSimulator.Controllers {
+
     [Route("doctors")]
     public class DoctorController: Controller {
         private readonly ApplicationDbContext _context;
@@ -15,63 +17,64 @@ namespace HospitalSimulator.Controllers {
         }
 
         [HttpGet]
-        public IEnumerable<Doctor> GetAll()
+        public IEnumerable<JObject> GetAll()
         {
-            return _context.Doctors.ToList();
-        }
+            var doctors =  _context.Doctors.Include(d => d.Roles).ToList();
+            var resultSet = new List<JObject>();
 
-        [HttpGet("{id}", Name = "GetDoctor")]
-        public IActionResult GetByID(long id)
-        {
-            Console.WriteLine("Getting Doctor");
-            var doctor = _context.Doctors.Where(d => d.DoctorID == id);
-            if (doctor == null)
+            foreach (var doctor in doctors)
             {
-                return NotFound();
+                var doctorJson = new JObject();
+                
+                doctorJson.Add("name", doctor.Name);
+                
+                // Get only the names of the doctor roles and covert it to JArray
+                var doctorRoles = new JArray(doctor.Roles.Select(r => r.RoleName).ToArray());
+                doctorJson.Add("roles", doctorRoles);
+
+                resultSet.Add(doctorJson);
             }
-            else
-            {
-                return new ObjectResult(doctor);
-            }
+            return resultSet;
         }
 
         [HttpPost]
-        public IActionResult Add ([FromBody] Doctor doctor)
+        public IActionResult Add ([FromBody] JObject payload)
         {
-            if(doctor == null)
+            if(payload == null)
             {
-                Console.WriteLine("Could not add the doctor");
                 return BadRequest();          
             }
-            else
+
+            var name = payload.GetValue("name").ToString();
+            var roles = payload.GetValue("roles").ToList().Select(r => r.ToString()).ToList();
+
+            var doctor = new Doctor {
+                Name = name,
+                Roles = new List<DoctorRole>()
+            };
+
+            foreach (var roleName in roles)
             {
-                if(doctor.DoctorRoles == null)
+                doctor.Roles.Add(new DoctorRole 
                 {
-                    doctor.DoctorRoles = new List<DoctorRole>();
-                }
-                foreach(var roleName in doctor.Roles)
-                {
-                    var role = _context.Roles.ToList().Find(r => r.Name == roleName);
-                    var doctorRole = new DoctorRole { RoleID = role.RoleID };
-                    doctor.DoctorRoles.Add(doctorRole);
-                }
-
-                Console.WriteLine("Trying to add the doctor");
-                _context.Doctors.Add(doctor);
-                
-                Console.WriteLine("Trying to save everything");
-                _context.SaveChanges();
-                
-                Console.WriteLine("Saved");
-
-                var returnObject = new Doctor {
-                    DoctorID = doctor.DoctorID,
-                    Name = doctor.Name,
-                    Roles = doctor.Roles
-                };
-
-                return new ObjectResult(returnObject);
+                    RoleName = roleName,
+                    DoctorID = doctor.DoctorID
+                });
             }
+
+            // Save the doctor object
+            _context.Doctors.Add(doctor);
+            _context.SaveChanges();
+
+            // Get only the names of the doctor roles and covert it to JArray
+            var doctorRoles = new JArray(doctor.Roles.Select(r => r.RoleName).ToArray());
+
+            // Create result object
+            var resultObject = new JObject();
+            resultObject.Add("name", doctor.Name);
+            resultObject.Add("roles", doctorRoles);
+
+            return new ObjectResult(resultObject);
         }
     }
 }

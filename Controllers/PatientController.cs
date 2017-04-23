@@ -22,21 +22,6 @@ namespace HospitalSimulator.Controllers
             return _context.Patients.ToList();
         }
 
-        [HttpGet("{id}", Name = "GetPatient")]
-        public IActionResult GetByID(long id)
-        {
-            var patient = _context.Patients.Where(p => p.PatientID == id);
-            if (patient == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return new ObjectResult(patient);
-            }
-        }
-
-        [HttpPost]
         public IActionResult Add ([FromBody] Patient patient)
         {
             if(patient == null)
@@ -47,7 +32,7 @@ namespace HospitalSimulator.Controllers
             {
                 _context.Patients.Add(patient);
                 _context.SaveChanges();
-                return CreatedAtRoute("GetPatient", new { id = patient.PatientID}, patient);
+                return CreatedAtRoute("ScheduleConsultation", new { id = patient.PatientID}, patient);
             }
         }
     }

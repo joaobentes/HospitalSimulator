@@ -17,17 +17,17 @@ namespace HospitalSimulator.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<DoctorRole>()
-                .HasKey(dr => new { dr.DoctorID , dr.RoleID });
+                .HasKey(dr => new { dr.DoctorID , dr.RoleName });
 
             modelBuilder.Entity<DoctorRole>()
                 .HasOne(d => d.Doctor)
-                .WithMany(dr => dr.DoctorRoles)
+                .WithMany(dr => dr.Roles)
                 .HasForeignKey(d => d.DoctorID);
 
             modelBuilder.Entity<DoctorRole>()
                 .HasOne(r => r.Role)
-                .WithMany(dr => dr.DoctorRoles)
-                .HasForeignKey(r => r.RoleID);
+                .WithMany(dr => dr.Doctors)
+                .HasForeignKey(r => r.RoleName);
         }
     }
 }

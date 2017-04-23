@@ -1,15 +1,16 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Collections.Generic;
 
 namespace HospitalSimulator.Models 
 {
     public class Role
     {
-        public int RoleID { get; set; }
         
-        [Required(ErrorMessage = "Doctor Role's Name is required.")]
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string Name { get; set; }        
         
-        public virtual List<DoctorRole> DoctorRoles { get; set; }
+        public virtual List<DoctorRole> Doctors { get; set; }
     }
 }

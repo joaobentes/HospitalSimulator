@@ -14,21 +14,7 @@ namespace HospitalSimulator.Controllers {
         public ConsultationController(ApplicationDbContext context)
         {
             _context = context;
-        }
-
-        [HttpGet("{id}", Name="GetConsultation")]
-        public IActionResult GetById(long id)
-        {
-            var consultation = _context.Consultations.Where(x => x.ConsultationID == id);
-            if(consultation == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return new ObjectResult(consultation);
-            }
-        }        
+        }    
 
         [HttpGet]
         public IEnumerable<Consultation> GetAll()
@@ -36,22 +22,17 @@ namespace HospitalSimulator.Controllers {
             return _context.Consultations.ToList();
         }
 
-        [HttpPost]
-        public IActionResult Add ([FromBody] Consultation consultation)
+        [HttpPost("{patientId}", Name="ScheduleConsultation")]
+        private IActionResult ScheduleConsultation(string patientId)
         {
-            if(consultation == null)
+            // Get patient id
+            var patient = (Patient) _context.Patients.Where(p => p.PatientID == patientId);
+
+            if(patient == null) 
             {
                 return BadRequest();
             }
-            else
-            {
-                var patient = (Patient) _context.Patients.Where(p => p.PatientID == consultation.PatientID);
-                return ScheduleConsultation(patient);
-            }                                
-        }
-
-        private IActionResult ScheduleConsultation(Patient patient)
-        {
+   
             // To reduce the number of db calls, the current state of the database is stored in lists
             var doctors = _context.Doctors.ToList();
             var rooms = _context.TreatmentRooms.ToList();
@@ -69,7 +50,7 @@ namespace HospitalSimulator.Controllers {
             // Find the next available date and register a consultation
             if(patient.Condition.Contains("Cancer"))
             {
-                var oncologists = doctors.FindAll(d => d.DoctorRoles.ToList().Exists( r => r.Role.Name == "Oncologist"));                
+                var oncologists = doctors.FindAll(d => d.Roles.Exists( r => r.Role.Name  == "Oncologist"));
                 
                 if(patient.Condition == "Cancer.Head&Neck")
                 {
@@ -159,7 +140,7 @@ namespace HospitalSimulator.Controllers {
             }
             else if (patient.Condition == "Flue")
             {
-                var generals = doctors.FindAll(d => d.DoctorRoles.ToList().Exists( r => r.Role.Name == "GeneralPractitioner"));
+                var generals = doctors.FindAll(d => d.Roles.ToList().Exists( r => r.Role.Name == "GeneralPractitioner"));
                 var basicRooms = rooms.FindAll(r => r.Machine == null);
                 while(!hasFound)
                 {
@@ -218,7 +199,7 @@ namespace HospitalSimulator.Controllers {
             _context.Consultations.Add(consultation);
             _context.SaveChanges();
 
-            return CreatedAtRoute("GetConsultation", new { id = consultation.ConsultationID }, consultation);
+            return new ObjectResult(consultation);
         }
     }
 }

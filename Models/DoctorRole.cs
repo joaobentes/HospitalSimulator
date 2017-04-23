@@ -2,10 +2,10 @@ namespace HospitalSimulator.Models
 {
     public class DoctorRole
     {
-        public int DoctorID { get; set; }
+        public string DoctorID { get; set; }
         public Doctor Doctor { get; set; }
 
-        public int RoleID { get; set; }
+        public string RoleName { get; set; }
         public Role Role { get; set; }
     }
 }

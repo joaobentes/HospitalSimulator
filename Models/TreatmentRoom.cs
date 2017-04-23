@@ -5,6 +5,7 @@ namespace HospitalSimulator.Models {
     public class TreatmentRoom {
 
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string Name { get; set; }
 
         [ForeignKey("TreatmentMachine")]
