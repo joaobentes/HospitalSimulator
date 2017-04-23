@@ -48,6 +48,15 @@ namespace HospitalSimulator.Controllers {
             var name = payload.GetValue("name").ToString();
             var roles = payload.GetValue("roles").ToList().Select(r => r.ToString()).ToList();
 
+            // Check if the all the roles exist
+            foreach (var role in roles)
+            {
+                if(!_context.Roles.ToList().Exists(r => r.Name == role))
+                {
+                    return BadRequest();
+                }
+            }
+
             var doctor = new Doctor {
                 Name = name,
                 Roles = new List<DoctorRole>()
