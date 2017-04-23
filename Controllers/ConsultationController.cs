@@ -50,7 +50,8 @@ namespace HospitalSimulator.Controllers {
             var consultations = _context.Consultations.Where(c => c.ConsultationDate > DateTime.Now).ToList();
 
             // Always start trying to find from tomorrow.
-            var potentialDate = DateTime.Now.AddDays(1.0); 
+            // All consultations start at 8 am.
+            var potentialDate = DateTime.Now.Date.AddHours(8).AddDays(1.0);
             
             // Control variables
             var hasFound = false;
@@ -99,14 +100,13 @@ namespace HospitalSimulator.Controllers {
                             }
                             else
                             {
-                                potentialDate.AddDays(1.0);
+                                potentialDate = potentialDate.AddDays(1.0);
                             }
                         }
                     }
                 }
                 else if(patient.Condition == "Cancer.Breast")
-                {
-                    Console.WriteLine("Get into Breast Cancer");
+                {;
                     // Set the data required to find the next available time
                     var equippedRooms = rooms.FindAll(r => (r.MachineName != null || r.MachineName != ""));
 
@@ -119,7 +119,7 @@ namespace HospitalSimulator.Controllers {
                         availableRooms.Clear();
                         availableDoctors.Clear();
                         availableRooms.AddRange(equippedRooms);
-                        availableDoctors.AddRange(oncologists); 
+                        availableDoctors.AddRange(oncologists);
 
                         if(currentConsultations.Count == 0)
                         {
@@ -127,7 +127,7 @@ namespace HospitalSimulator.Controllers {
                             hasFound = true;
                         }
                         else
-                        {                            
+                        {                      
                             // Check availiable rooms and doctors for the current date
                             foreach (var c in currentConsultations)
                             {
@@ -142,14 +142,14 @@ namespace HospitalSimulator.Controllers {
                             }
                             else
                             {
-                                potentialDate.AddDays(1.0);
+                                potentialDate = potentialDate.AddDays(1.0);
                             }
                         }
                     }
                 }
                 else
                 {
-                    return BadRequest();
+                    return BadRequest("Unknown Patient Condition");
                 }
             }
             else if (patient.Condition == "Flue")
@@ -186,14 +186,14 @@ namespace HospitalSimulator.Controllers {
                         }
                         else
                         {
-                            potentialDate.AddDays(1.0);
+                            potentialDate = potentialDate.AddDays(1.0);
                         }
                     }
                 }
             }
             else
             {
-                return BadRequest();
+                return BadRequest("Unknown Patient Condition");
             }
 
             // Get the first doctor available
