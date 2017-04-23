@@ -37,12 +37,12 @@ namespace HospitalSimulator.Controllers {
             return resultSet;
         }
 
-        [HttpPost]
-        public IActionResult Add ([FromBody] JObject payload)
+        [HttpPost]        
+        public IActionResult Create ([FromBody] JObject payload)
         {
             if(payload == null)
             {
-                return BadRequest("Invalid doctor object");          
+                return BadRequest("Invalid Doctor object");          
             }
 
             var name = payload.GetValue("name").ToString();

@@ -1,6 +1,9 @@
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 
 using HospitalSimulator.Models;
 
@@ -22,17 +25,19 @@ namespace HospitalSimulator.Controllers
             return _context.Patients.ToList();
         }
 
-        public IActionResult Add ([FromBody] Patient patient)
+        [HttpPost]
+        public IActionResult Create ([FromBody] Patient patient)
         {
             if(patient == null)
             {
-                return BadRequest();
+                return BadRequest("Invalid Patient object");
             }
             else
             {
                 _context.Patients.Add(patient);
                 _context.SaveChanges();
-                return CreatedAtRoute("ScheduleConsultation", new { id = patient.PatientID}, patient);
+                var consultationController = new ConsultationController(_context);
+                return consultationController.Create(new Consultation { PatientID = patient.PatientID });
             }
         }
     }
