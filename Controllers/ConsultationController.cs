@@ -19,13 +19,20 @@ namespace HospitalSimulator.Controllers {
         }    
 
         [HttpGet]
-        public IEnumerable<Consultation> GetAll()
+        public IEnumerable<JObject> GetAll()
         {
-            return _context.Consultations
-                    .Include(c => c.Doctor)
-                    .Include(c => c.Patient)
-                    .Include(c => c.TreatmentRoom)
-                    .ToList();
+            List<Consultation> consultations = _context.Consultations
+                                                .Include(c => c.Doctor)
+                                                .Include(c => c.Patient)
+                                                .Include(c => c.TreatmentRoom)
+                                                .ToList();
+            // Prepare the result set object
+            List<JObject> resultSet = new List<JObject>();
+            foreach (var c in consultations)
+            {
+                resultSet.Add(BuildResultObject(c));
+            }
+            return resultSet;
         }
 
         [HttpPost]
@@ -207,24 +214,33 @@ namespace HospitalSimulator.Controllers {
             _context.Consultations.Add(newConsultation);
             _context.SaveChanges();
 
-            // Prepare the doctor object
-            var doctorObject = new JObject();
-            doctorObject.Add("name", doctor.Name);
-            doctorObject.Add("roles", new JArray(doctor.Roles.Select(r => r.RoleName).ToArray()));
-
-            // Create the result object
-            var resultObject = new JObject();
-            resultObject.Add("consultationID", newConsultation.ConsultationID);
-            resultObject.Add("registrationDate", newConsultation.RegistrationDate);
-            resultObject.Add("consultationDate", newConsultation.ConsultationDate);
-            resultObject.Add("patientID", newConsultation.PatientID);
-            resultObject.Add("patient", JObject.FromObject(newConsultation.Patient));
-            resultObject.Add("doctorID", newConsultation.DoctorID);
-            resultObject.Add("doctor", doctorObject);
-            resultObject.Add("treatmentRoomName", newConsultation.TreatmentRoomName);
-            resultObject.Add("treatmentRoom", JObject.FromObject(newConsultation.TreatmentRoom));            
-
-            return new ObjectResult(resultObject);
+            return new ObjectResult(BuildResultObject(newConsultation));
         }
-    }
+
+        private JObject BuildResultObject(Consultation consultation)
+        {
+            // Prepare the doctor json object
+            var doctor = _context.Doctors.Include(d => d.Roles).ToList().Where(d => d.DoctorID == consultation.Doctor.DoctorID).First();
+            var doctorJson = new JObject();
+            doctorJson.Add("name", doctor.Name);
+            doctorJson.Add("roles", new JArray(doctor.Roles.Select(r => r.RoleName).ToArray()));
+
+            // Prepare the treatment room object
+            var room = _context.TreatmentRooms.Include(t => t.Machine).ToList().Where(t => t.Name == consultation.TreatmentRoomName).First();
+
+            // Create the result set object
+            var resultObject = new JObject();
+            resultObject.Add("consultationID", consultation.ConsultationID);
+            resultObject.Add("registrationDate", consultation.RegistrationDate);
+            resultObject.Add("consultationDate", consultation.ConsultationDate);
+            resultObject.Add("patientID", consultation.PatientID);
+            resultObject.Add("patient", JObject.FromObject(consultation.Patient));
+            resultObject.Add("doctorID", consultation.DoctorID);
+            resultObject.Add("doctor", doctorJson);
+            resultObject.Add("treatmentRoomName", consultation.TreatmentRoomName);
+            resultObject.Add("treatmentRoom", JObject.FromObject(room));
+
+            return resultObject;
+        }
+    }    
 }
