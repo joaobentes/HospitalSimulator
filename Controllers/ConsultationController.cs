@@ -70,8 +70,9 @@ namespace HospitalSimulator.Controllers {
 
                     while(!hasFound)
                     {
-                        var currentConsultations = consultations.FindAll(c => oncologists.Exists(o => o.DoctorID == c.DoctorID) 
-                                                                        && advancedRooms.Exists(r => r.Name == c.TreatmentRoomName)
+                        var consultationsPerDoctor = consultations.FindAll(c => doctors.Exists(d => d.DoctorID == d.DoctorID)
+                                                                        && c.ConsultationDate.Equals(potentialDate));
+                        var consultationsPerRoom = consultations.FindAll(c => advancedRooms.Exists(r => r.Name == c.TreatmentRoomName)
                                                                         && c.ConsultationDate.Equals(potentialDate));
                         // Prepare objects
                         availableRooms.Clear();
@@ -79,30 +80,26 @@ namespace HospitalSimulator.Controllers {
                         availableRooms.AddRange(advancedRooms);
                         availableDoctors.AddRange(oncologists);
 
-                        if(currentConsultations.Count == 0)
+                        // Check available doctors
+                        foreach (var c in consultationsPerDoctor)
+                        {
+                            availableDoctors.Remove(c.Doctor);
+                        }
+                        // Check available rooms
+                        foreach (var c in consultationsPerRoom)
+                        {
+                            availableRooms.Remove(c.TreatmentRoom);
+                        }
+                        
+                        if(availableDoctors.Count > 0 && availableRooms.Count > 0)
                         {
                             consultationDate = potentialDate;
                             hasFound = true;
                         }
                         else
                         {
-                            // Check availiable rooms and doctors for the current date
-                            foreach (var c in currentConsultations)
-                            {
-                                availableDoctors.Remove(c.Doctor);
-                                availableRooms.Remove(c.TreatmentRoom);
-                            }
-                            
-                            if(availableDoctors.Count > 0 && availableRooms.Count > 0)
-                            {
-                                consultationDate = potentialDate;
-                                hasFound = true;
-                            }
-                            else
-                            {
-                                potentialDate = potentialDate.AddDays(1.0);
-                            }
-                        }
+                            potentialDate = potentialDate.AddDays(1.0);
+                        }                        
                     }
                 }
                 else if(patient.Condition == "Cancer.Breast")
@@ -112,8 +109,9 @@ namespace HospitalSimulator.Controllers {
 
                     while(!hasFound)
                     {
-                        var currentConsultations = consultations.FindAll(c => oncologists.Exists(o => o.DoctorID == c.DoctorID) 
-                                                                        && equippedRooms.Exists(r => r.Name == c.TreatmentRoomName)
+                        var consultationsPerDoctor = consultations.FindAll(c => doctors.Exists(d => d.DoctorID == d.DoctorID)
+                                                                        && c.ConsultationDate.Equals(potentialDate));
+                        var consultationsPerRoom =  consultations.FindAll(c => equippedRooms.Exists(r => r.Name == c.TreatmentRoomName)
                                                                         && c.ConsultationDate.Equals(potentialDate));
                         // Prepare objects
                         availableRooms.Clear();
@@ -121,29 +119,25 @@ namespace HospitalSimulator.Controllers {
                         availableRooms.AddRange(equippedRooms);
                         availableDoctors.AddRange(oncologists);
 
-                        if(currentConsultations.Count == 0)
+                        // Check available doctors
+                        foreach (var c in consultationsPerDoctor)
+                        {
+                            availableDoctors.Remove(c.Doctor);
+                        }
+                        // Check available rooms
+                        foreach (var c in consultationsPerRoom)
+                        {
+                            availableRooms.Remove(c.TreatmentRoom);
+                        }
+                        
+                        if(availableDoctors.Count > 0 && availableRooms.Count > 0)
                         {
                             consultationDate = potentialDate;
                             hasFound = true;
                         }
                         else
-                        {                      
-                            // Check availiable rooms and doctors for the current date
-                            foreach (var c in currentConsultations)
-                            {
-                                availableDoctors.Remove(c.Doctor);
-                                availableRooms.Remove(c.TreatmentRoom);
-                            }
-                            
-                            if(availableDoctors.Count > 0 && availableRooms.Count > 0)
-                            {
-                                consultationDate = potentialDate;
-                                hasFound = true;
-                            }
-                            else
-                            {
-                                potentialDate = potentialDate.AddDays(1.0);
-                            }
+                        {
+                            potentialDate = potentialDate.AddDays(1.0);
                         }
                     }
                 }
@@ -158,36 +152,35 @@ namespace HospitalSimulator.Controllers {
                 var basicRooms = rooms.FindAll(r => r.MachineName == null || r.MachineName == "");
                 while(!hasFound)
                 {
-                    var currentConsultations = consultations.FindAll(c => generals.Exists(o => o.DoctorID == c.DoctorID) 
-                                                                                            && basicRooms.Exists(r => r.Name == c.TreatmentRoomName)
-                                                                                            && c.ConsultationDate.Equals(potentialDate));
+                    var consultationsPerDoctor = consultations.FindAll(c => doctors.Exists(d => d.DoctorID == d.DoctorID)
+                                                                        && c.ConsultationDate.Equals(potentialDate));
+                    var consultationsPerRoom = consultations.FindAll(c => basicRooms.Exists(r => r.Name == c.TreatmentRoomName)
+                                                                        && c.ConsultationDate.Equals(potentialDate));
                     // Prepare available rooms and doctors candidates
                     availableRooms.Clear();
                     availableDoctors.Clear();
                     availableDoctors.AddRange(generals);
                     availableRooms.AddRange(basicRooms);                                                                                            
                     
-                    if(currentConsultations.Count == 0)
+                    // Check available doctors
+                    foreach (var c in consultationsPerDoctor)
+                    {
+                        availableDoctors.Remove(c.Doctor);
+                    }
+                    // Check available rooms
+                    foreach (var c in consultationsPerRoom)
+                    {
+                        availableRooms.Remove(c.TreatmentRoom);
+                    }
+
+                    if(availableDoctors.Count > 0 && availableRooms.Count > 0)
                     {
                         consultationDate = potentialDate;
                         hasFound = true;
                     }
                     else
                     {
-                        foreach (var c in currentConsultations)
-                        {
-                            availableRooms.Remove(c.TreatmentRoom);
-                            availableDoctors.Remove(c.Doctor);
-                        }
-                        if(availableDoctors.Count > 0 && availableRooms.Count > 0)
-                        {
-                            consultationDate = potentialDate;
-                            hasFound = true;
-                        }
-                        else
-                        {
-                            potentialDate = potentialDate.AddDays(1.0);
-                        }
+                        potentialDate = potentialDate.AddDays(1.0);
                     }
                 }
             }
