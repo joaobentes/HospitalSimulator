@@ -1,0 +1,20 @@
+{
+    "roles" : ["Oncologist", "GeneralPractitioner"],
+    "doctors" : [
+        { "name" : "John", "roles" : [ "Oncologist" ] },
+        { "name" : "Anna", "roles" : [ "GeneralPractitioner" ] },
+        { "name" : "Peter", "roles" : [ "Oncologist", "GeneralPractitioner" ] }
+    ],
+    "treatmentMachines" : [
+        { "name" : "Elekta", "capability" : "Advanced" },
+        { "name" : "Varian", "capability" : "Advanced" },
+        { "name" : "MM50", "capability" : "Simple" }
+    ],
+    "treatmentRooms" : [
+        { "name" : "One", "treatmentMachine" : "Elekta" },
+        { "name" : "Two", "treatmentMachine" : "Varian" },
+        { "name" : "Three", "treatmentMachine" : "MM50" },
+        { "name" : "Four" },
+        { "name" : "Five" }
+    ]
+}

@@ -42,7 +42,7 @@ namespace HospitalSimulator.Controllers {
         {
             if(payload == null)
             {
-                return BadRequest();          
+                return BadRequest("Invalid doctor object");          
             }
 
             var name = payload.GetValue("name").ToString();
@@ -53,7 +53,7 @@ namespace HospitalSimulator.Controllers {
             {
                 if(!_context.Roles.ToList().Exists(r => r.Name == role))
                 {
-                    return BadRequest();
+                    return BadRequest("Invalid doctor roles");
                 }
             }
 
