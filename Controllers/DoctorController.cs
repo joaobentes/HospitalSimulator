@@ -6,10 +6,11 @@ using Newtonsoft.Json.Linq;
 
 using HospitalSimulator.Models;
 
-namespace HospitalSimulator.Controllers {
-
+namespace HospitalSimulator.Controllers 
+{
     [Route("doctors")]
-    public class DoctorController: Controller {
+    public class DoctorController: Controller 
+    {
         private readonly ApplicationDbContext _context;
         public DoctorController(ApplicationDbContext context)
         {

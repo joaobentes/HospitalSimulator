@@ -7,11 +7,12 @@ using Newtonsoft.Json.Linq;
 
 using HospitalSimulator.Models;
 
-namespace HospitalSimulator.Controllers {
+namespace HospitalSimulator.Controllers 
+{
 
     [Route("consultations")]
-    public class ConsultationController: Controller {
-
+    public class ConsultationController: Controller 
+    {
         private readonly ApplicationDbContext _context;
         public ConsultationController(ApplicationDbContext context)
         {
@@ -60,13 +61,13 @@ namespace HospitalSimulator.Controllers {
             // All consultations start at 8 am.
             var potentialDate = DateTime.Now.Date.AddHours(8).AddDays(1.0);
             
-            // Control variables
+            // Control variables - For all use cases
             var hasFound = false;
             var availableRooms = new List<TreatmentRoom>();
             var availableDoctors = new List<Doctor>();
             var consultationDate = new DateTime();
-            
-            // Find the next available date and register a consultation
+                        
+            // Find the next available date, available doctors and rooms.
             if(patient.Condition.Contains("Cancer"))
             {
                 var oncologists = doctors.FindAll(d => d.Roles.Exists( r => r.RoleName  == "Oncologist"));
@@ -81,7 +82,7 @@ namespace HospitalSimulator.Controllers {
                                                                         && c.ConsultationDate.Equals(potentialDate));
                         var consultationsPerRoom = consultations.FindAll(c => advancedRooms.Exists(r => r.Name == c.TreatmentRoomName)
                                                                         && c.ConsultationDate.Equals(potentialDate));
-                        // Prepare objects
+                        // Prepare available rooms and doctors candidates
                         availableRooms.Clear();
                         availableDoctors.Clear();
                         availableRooms.AddRange(advancedRooms);
@@ -110,8 +111,7 @@ namespace HospitalSimulator.Controllers {
                     }
                 }
                 else if(patient.Condition == "Cancer.Breast")
-                {;
-                    // Set the data required to find the next available time
+                {
                     var equippedRooms = rooms.FindAll(r => (r.MachineName != null || r.MachineName != ""));
 
                     while(!hasFound)
@@ -120,7 +120,7 @@ namespace HospitalSimulator.Controllers {
                                                                         && c.ConsultationDate.Equals(potentialDate));
                         var consultationsPerRoom =  consultations.FindAll(c => equippedRooms.Exists(r => r.Name == c.TreatmentRoomName)
                                                                         && c.ConsultationDate.Equals(potentialDate));
-                        // Prepare objects
+                        // Prepare available rooms and doctors candidates
                         availableRooms.Clear();
                         availableDoctors.Clear();
                         availableRooms.AddRange(equippedRooms);

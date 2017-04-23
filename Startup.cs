@@ -21,7 +21,6 @@ namespace HospitalSimulator
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
@@ -43,12 +42,13 @@ namespace HospitalSimulator
             loggerFactory.AddDebug();
             app.UseStaticFiles();
 
-            // Seed database
+            // Seed database on Startup
             Seed(app.ApplicationServices.GetService<ApplicationDbContext>());
 
             app.UseMvc();
         }
 
+        // This method seeds the database based on a json file
         private static void Seed(ApplicationDbContext context)
         {
             JObject dbSeed = JObject.Parse(File.ReadAllText("dbSeed.json"));

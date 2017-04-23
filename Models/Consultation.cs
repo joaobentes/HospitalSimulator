@@ -2,8 +2,10 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace HospitalSimulator.Models {
-    public class Consultation {
+namespace HospitalSimulator.Models 
+{
+    public class Consultation 
+    {
         public string ConsultationID { get; set; }
         public DateTime RegistrationDate { get; set; }
         public DateTime ConsultationDate { get; set; }

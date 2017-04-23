@@ -1,7 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 
-namespace HospitalSimulator.Models {
+namespace HospitalSimulator.Models 
+{
     public class Doctor 
     {   
         public string DoctorID { get; set; }

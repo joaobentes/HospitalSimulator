@@ -1,7 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace HospitalSimulator.Models {
-    public class Patient {
+namespace HospitalSimulator.Models 
+{
+    public class Patient 
+    {
         public string PatientID { get; set; }
 
         [Required(ErrorMessage = "Patient's Name is required.")]

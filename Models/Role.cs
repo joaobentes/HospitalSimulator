@@ -5,8 +5,7 @@ using System.Collections.Generic;
 namespace HospitalSimulator.Models 
 {
     public class Role
-    {
-        
+    {      
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string Name { get; set; }        
