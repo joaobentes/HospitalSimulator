@@ -36,6 +36,7 @@ To run the Hospital Simulator base image, you should install Docker. Please refe
 The following command will get you running a container with the Hospital Simulator:
 
 ```shell
+docker run --name hospsim -p 5000:5000 -d hospitalsimulator:0.1
 docker run jbentes/hospital-simulator:0.1
 ```
 
