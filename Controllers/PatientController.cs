@@ -28,9 +28,9 @@ namespace HospitalSimulator.Controllers
         [HttpPost]
         public IActionResult Create ([FromBody] Patient patient)
         {
-            if(patient == null)
+            if(patient == null || patient.Name == null || patient.Condition == null)
             {
-                return BadRequest("Invalid Patient object");
+                return BadRequest(new { error = "Invalid Patient Data" });
             }
             else
             {

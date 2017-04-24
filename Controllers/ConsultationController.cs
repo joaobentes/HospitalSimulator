@@ -36,12 +36,11 @@ namespace HospitalSimulator.Controllers
             return resultSet;
         }
 
-        [HttpPost]
         public IActionResult Create([FromBody] Consultation consultation)
         {
             if(consultation == null)
             {
-                return BadRequest("Invalid Consultation object");
+                return BadRequest(new { error = "Invalid Consultation object" });
             }
 
             // Get patient from id
@@ -49,7 +48,7 @@ namespace HospitalSimulator.Controllers
 
             if(patient == null)
             {
-                return BadRequest("Patient not found");
+                return BadRequest(new { error = "Invalid Consultation object" });
             }
    
             // To reduce the number of db calls, the current state of the database is stored in lists
@@ -150,7 +149,7 @@ namespace HospitalSimulator.Controllers
                 }
                 else
                 {
-                    return BadRequest("Unknown Patient Condition");
+                    return BadRequest(new { error = "Invalid Patient Condition" });
                 }
             }
             else if (patient.Condition == "Flue")
@@ -193,7 +192,7 @@ namespace HospitalSimulator.Controllers
             }
             else
             {
-                return BadRequest("Unknown Patient Condition");
+                return BadRequest(new { error = "Invalid Patient Condition" });
             }
 
             // Get the first doctor available
