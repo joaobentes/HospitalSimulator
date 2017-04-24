@@ -6,8 +6,10 @@ namespace HospitalSimulator.Models
     {
         public string PatientID { get; set; }
 
+        [Required]
         public string Name { get; set; }
         
+        [Required]
         public string Condition { get; set; }
     }
 }

@@ -7,6 +7,7 @@ namespace HospitalSimulator.Models
     {   
         public string DoctorID { get; set; }
 
+        [Required]
         public string Name { get; set; }
 
         public List<DoctorRole> Roles { get; set; }

@@ -8,6 +8,8 @@ namespace HospitalSimulator.Models
     {      
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        
+        [Required]
         public string Name { get; set; }        
         
         public virtual List<DoctorRole> Doctors { get; set; }

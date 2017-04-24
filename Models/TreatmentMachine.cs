@@ -7,8 +7,11 @@ namespace HospitalSimulator.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        
+        [Required]
         public string Name { get; set; }
         
+        [Required]
         public string Capability { get; set; }
     }
 }
