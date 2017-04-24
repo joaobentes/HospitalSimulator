@@ -29,17 +29,6 @@ dotnet run
 
 The Web API will be available on the port 5000. For example: `http://localhost:5000`.
 
-### For Docker
-
-To run the Hospital Simulator base image, you should install Docker. Please refer to here to get instructions to install Docker on Windows, MacOS and Linux.
-
-The following command will get you running a container with the Hospital Simulator:
-
-```shell
-docker run --name hospsim -p 5000:5000 -d hospitalsimulator:0.1
-docker run jbentes/hospital-simulator:0.1
-```
-
 ## API Reference Documentation
 
 ### Register a patient
