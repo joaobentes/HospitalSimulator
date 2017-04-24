@@ -39,10 +39,96 @@ The following command will get you running a container with the Hospital Simulat
 docker run jbentes/hospital-simulator:0.1
 ```
 
-## API Description
+## API Reference Documentation
 
-### Register a new patient
+**Register a patient**
+----
 
-### Get all patients
+* **URL**
 
-### Get all consultations
+  /patients
+
+* **Method:**
+  
+  `POST`
+  
+*  **URL Params**
+
+   None
+
+* **Data Params**
+
+    **Example**
+    ```json
+    {
+          u
+    }
+    ```
+
+* **Success Response:**
+  
+  * **Code:** 200 <br />
+    **Content:** `{ id : 12 }`
+ 
+* **Error Response:**
+
+  * **Code:** 422 UNPROCESSABLE ENTRY <br />
+    **Content:** `{ error : "Email Invalid" }`
+
+**Get all patients**
+----
+
+* **URL**
+
+  /patients
+
+* **Method:**
+  
+  `GET`
+  
+*  **URL Params**
+
+   None
+
+* **Data Params**
+
+    None
+
+* **Success Response:**
+  
+  * **Code:** 200 <br />
+    **Content:** `{ id : 12 }`
+ 
+* **Error Response:**
+
+  * **Code:** 422 UNPROCESSABLE ENTRY <br />
+    **Content:** `{ error : "Email Invalid" }`
+
+**Get all consultations**
+----
+
+* **URL**
+
+  /patients
+
+* **Method:**
+  
+  `GET`
+  
+*  **URL Params**
+
+   None
+
+* **Data Params**
+
+    None
+
+* **Success Response:**
+  
+  * **Code:** 200 <br />
+    **Content:** `{ id : 12 }`
+ 
+* **Error Response:**
+
+  * **Code:** 422 UNPROCESSABLE ENTRY <br />
+    **Content:** `{ error : "Email Invalid" }`
