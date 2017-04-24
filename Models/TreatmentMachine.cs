@@ -9,7 +9,6 @@ namespace HospitalSimulator.Models
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string Name { get; set; }
         
-        [Required(ErrorMessage = "Treatment Machine's Capability is required.")]
         public string Capability { get; set; }
     }
 }

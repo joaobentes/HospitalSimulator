@@ -10,17 +10,14 @@ namespace HospitalSimulator.Models
         public DateTime RegistrationDate { get; set; }
         public DateTime ConsultationDate { get; set; }
         
-        [Required(ErrorMessage = "Patient's ID is required.")]
         [ForeignKey("Patient")]
         public string PatientID { get; set; }
         public virtual Patient Patient { get; set; }
 
-        [Required(ErrorMessage = "Doctor's ID is required.")]
         [ForeignKey("Doctor")]
         public string DoctorID { get; set; }
         public virtual Doctor Doctor { get; set; }
 
-        [Required(ErrorMessage = "Treatment Machine's Name is required.")]
         [ForeignKey("TreatmentRoom")]
         public string TreatmentRoomName { get; set; }
         public virtual TreatmentRoom TreatmentRoom { get; set; }
