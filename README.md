@@ -102,10 +102,10 @@ docker run jbentes/hospital-simulator:0.1
     
 * **Error Response:**
 
-  * **Code:** 422 UNPROCESSABLE ENTRY <br />
+  * **Code:** 400 BAD REQUEST <br />
     **Content:** 
-    `{ error : "Invalid Patient Condition" }` OR `{ error : "Invalid Patient Data" }` 
-    
+    `{ error : "Invalid Patient Condition" }` OR `{ error : "Invalid Patient Data" }` OR `{ error = "Invalid Consultation object" }`
+    
 * **Notes:**
 
   The version 0.1 only supports three types of patient's condition: (1) Cancer.Head&Neck, (2) Cancer.Breast, (3) Flue.
